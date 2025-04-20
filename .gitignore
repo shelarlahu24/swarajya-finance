@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+
+# Django
+db.sqlite3
+*.sqlite3
+
+# Environments
+.env
+
+# VSCode or IDE stuff
+.vscode/
+.idea/
+
+# Migrations (optional – keep if you want history in Git)
+*/migrations/*.py
+*/migrations/*.pyc
+!*/migrations/__init__.py
+
+# OS files
+.DS_Store
+Thumbs.db
