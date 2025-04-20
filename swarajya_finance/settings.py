@@ -26,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['swarajya-finance.up.railway.app']
+ALLOWED_HOSTS = ['web-production-55919.up.railway.app','127.0.0.1','localhost']
 
 
 # Application definition
