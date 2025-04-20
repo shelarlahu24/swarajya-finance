@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = False
 
-ALLOWED_HOSTS = ['web-production-fd17.up.railway.app', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['swarajya-finance.up.railway.app', '127.0.0.1', 'localhost']
 
 
 # Application definition
