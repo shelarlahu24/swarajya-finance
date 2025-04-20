@@ -1,0 +1,1 @@
+web: gunicorn swarajya_finance.wsgi

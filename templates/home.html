@@ -1,0 +1,339 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<!-- Hero Section with Gradient Background -->
+<section
+  class="text-white py-5"
+  style="min-height: 60vh; background: rgb(134, 134, 134)"
+>
+  <div
+    class="container d-flex flex-column justify-content-center align-items-center text-center"
+    style="min-height: 60vh"
+    data-aos="zoom-in"
+  >
+    <!-- Logo -->
+    <img
+      src="{% static 'images/logo.png' %}"
+      alt="Swarajya Finance Logo"
+      class="mb-4"
+      style="height: 150px"
+    />
+
+    <!-- Heading -->
+    <h1 class="display-4 fw-bold">Welcome to Swarajya Finance</h1>
+
+    <!-- Subtext -->
+    <p class="lead mt-3 mb-4">
+      Empowering communities through responsible microfinance and inclusive
+      banking solutions.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div>
+      <a href="#services" class="btn btn-light btn-lg me-3"
+        ><i class="bi bi-cash-coin me-2"></i>Our Services</a
+      >
+      <a href="#contact" class="btn btn-outline-light btn-lg"
+        ><i class="bi bi-telephone me-2"></i>Contact Us</a
+      >
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5 bg-light">
+  <div class="container text-center" data-aos="fade-up">
+    <h2 class="mb-4 fw-bold">Our Services</h2>
+    <p class="mb-5 text-muted">
+      Explore how Swarajya Finance empowers your growth
+    </p>
+
+    <div class="row g-4">
+      <!-- Service 1 -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <i class="bi bi-cash-stack fs-1 text-primary mb-3"></i>
+            <h5 class="card-title">Micro Loans</h5>
+            <p class="card-text text-muted">
+              Quick and accessible micro-loans to support your business or
+              personal needs.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <i class="bi bi-piggy-bank fs-1 text-success mb-3"></i>
+            <h5 class="card-title">Daily Savings</h5>
+            <p class="card-text text-muted">
+              Build your future with safe and secure daily savings plans
+              tailored for all.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <i class="bi bi-person-lines-fill fs-1 text-danger mb-3"></i>
+            <h5 class="card-title">Collection Agents</h5>
+            <p class="card-text text-muted">
+              Our field agents ensure smooth, doorstep collections for your
+              convenience.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Us Section -->
+<section id="about" class="py-5 bg-white">
+  <div class="container" data-aos="fade-right">
+    <div class="row align-items-center">
+      <!-- Image -->
+      <div class="col-md-6 mb-4 mb-md-0">
+        <img
+          src="{% static 'images/about_us.jpg' %}"
+          alt="About Swarajya Finance"
+          class="img-fluid rounded shadow"
+        />
+      </div>
+
+      <!-- Text -->
+      <div class="col-md-6">
+        <h2 class="fw-bold mb-3">About Swarajya Finance</h2>
+        <p class="text-muted">
+          Swarajya Finance is dedicated to empowering individuals and small
+          businesses through microfinance services that are accessible, ethical,
+          and community-driven.
+        </p>
+        <p class="text-muted">
+          From daily savings to doorstep collections and flexible loan options,
+          we ensure every rupee counts towards building a better future.
+        </p>
+        <a href="#contact" class="btn btn-primary mt-3"
+          ><i class="bi bi-envelope me-2"></i>Get in Touch</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline Section -->
+<section id="milestones" class="py-5 bg-light">
+  <div class="container" data-aos="fade-up">
+    <h2 class="text-center fw-bold mb-5">Our Journey</h2>
+
+    <div class="timeline">
+      <!-- Item -->
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h5>2018 – Swarajya Founded</h5>
+          <p>
+            Started in a small village with a vision to empower local
+            entrepreneurs with microfinance.
+          </p>
+        </div>
+      </div>
+
+      <!-- Item -->
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <h5>2020 – 1000+ Customers</h5>
+          <p>
+            Crossed a major milestone with over 1000 active customers saving
+            daily with Swarajya.
+          </p>
+        </div>
+      </div>
+
+      <!-- Item -->
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h5>2023 – Digital Transformation</h5>
+          <p>
+            Launched our digital platform for customers to check balances,
+            transactions, and apply online.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section id="stats" class="py-5 text-white" style="background: #007bff">
+  <div class="container text-center" data-aos="fade-up">
+    <h2 class="fw-bold mb-4">Our Impact in Numbers</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <h3 class="display-5 fw-bold counter">1500+</h3>
+        <p>Happy Customers</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3 class="display-5 fw-bold counter">₹75L+</h3>
+        <p>Loans Disbursed</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3 class="display-5 fw-bold counter">15+</h3>
+        <p>Field Agents</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3 class="display-5 fw-bold counter">5</h3>
+        <p>Years of Service</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-5 bg-white">
+  <div class="container" data-aos="fade-up">
+    <h2 class="text-center fw-bold mb-5">What Our Clients Say</h2>
+
+    <div
+      id="testimonialCarousel"
+      class="carousel slide"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="text-center">
+            <p class="fs-5">
+              “Swarajya helped me expand my small grocery shop. Their team is
+              supportive and transparent.”
+            </p>
+            <h5 class="fw-bold">– Sunita Patil</h5>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="text-center">
+            <p class="fs-5">
+              “Daily saving system is so convenient! Agents visit regularly and
+              update everything properly.”
+            </p>
+            <h5 class="fw-bold">– Ram Shinde</h5>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="text-center">
+            <p class="fs-5">
+              “Best microfinance service I’ve experienced. Local, fast, and
+              trustworthy.”
+            </p>
+            <h5 class="fw-bold">– Anita Jadhav</h5>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#testimonialCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#testimonialCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5 bg-light">
+  <div class="container" data-aos="fade-up">
+    <h2 class="text-center fw-bold mb-4">Get in Touch</h2>
+    <div class="row g-4">
+      <!-- Contact Form -->
+      <div class="col-md-6">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter your name"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Enter your email"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea
+              class="form-control"
+              rows="4"
+              placeholder="Type your message"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Google Map -->
+      <div class="col-md-6">
+        <div class="map-responsive rounded shadow-sm">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.706932169558!2d72.83105961490236!3d19.12023788706724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b742c3df6c5f%3A0xa4cf0b6a7e39ef10!2sYour%20Business%20Location!5e0!3m2!1sen!2sin!4v1612345678901"
+            width="100%"
+            height="350"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          >
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Counter Animation -->
+<script>
+  const counters = document.querySelectorAll('.counter')
+  counters.forEach((counter) => {
+    counter.innerText = '0'
+    const updateCounter = () => {
+      const target = +counter.textContent.replace(/\D/g, '') || 0
+      const current = +counter.innerText.replace(/\D/g, '') || 0
+      const increment = Math.ceil(target / 100)
+
+      if (current < target) {
+        counter.innerText = current + increment + '+'
+        setTimeout(updateCounter, 20)
+      } else {
+        counter.innerText = target + '+'
+      }
+    }
+    updateCounter()
+  })
+</script>
+
+{% endblock %}

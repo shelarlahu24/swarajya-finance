@@ -1,0 +1,8 @@
+{% extends "admin/change_list.html" %} {% block content %}
+<h1>🧮 Calculate Agent Commission</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit" class="default">Calculate</button>
+  <a href=".." class="button">Cancel</a>
+</form>
+{% endblock %}

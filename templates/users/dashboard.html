@@ -1,0 +1,88 @@
+{% extends 'users/main.html' %}
+<!--  content -->
+{% block content %}
+<!-- Content Header -->
+<div class="content-header">
+  <h5 class="mb-0">Dashboard</h5>
+</div>
+
+<!-- Content Area -->
+<div class="content">
+  <div class="row g-4">
+    <div class="col-md-3 col-6">
+      <div class="card text-bg-primary">
+        <div class="card-body">
+          <a class="card-title h6 text-decoration-none" href="{% url "collections" %}">Today's Collections</a>
+          <h4 class="card-text">₹{{todays_total}}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="card text-bg-success">
+        <div class="card-body">
+          <a class="card-title h6 text-decoration-none" href="{% url "customer_list" %}">
+            Customers
+          </a>
+          <h4 class="card-text">{{total_customers}}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <!-- Monthly Chart Section -->
+          <div class="mb-4">
+            <!-- Total Monthly Collection Display -->
+            <!-- <h5 class="mb-3">Total Collection: ₹{{ total_monthly_collection }}</h5> -->
+
+            <!-- Chart Canvas -->
+            <h6 class="mb-2 text-center">Monthly Collection Summary</h6>
+            <canvas id="monthlyChart" height="100"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('monthlyChart').getContext('2d');
+  const monthlyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [{
+        label: 'Daily Collection (₹)',
+        data: {{ chart_data|safe }},
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Day of Month'
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Amount (₹)'
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

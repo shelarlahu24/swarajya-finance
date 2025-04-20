@@ -1,0 +1,126 @@
+<!-- templates/admin/custom_index.html -->
+{% extends "admin/index.html" %} {% block content %}
+<div class="col-12">
+  <div class="row">
+    <!-- Total Customers -->
+    <div class="col-md-3">
+      <div class="card text-white bg-primary mb-3 shadow rounded-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <i class="fas fa-users fa-2x me-3"></i>
+            <div>
+              <h5 class="card-title mb-1">Total Customers</h5>
+              <p class="card-text fs-4 text-right">{{ total_customers }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Agents -->
+    <div class="col-md-3">
+      <div class="card text-white bg-info mb-3 shadow rounded-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <i class="fas fa-user-tie fa-2x me-3"></i>
+            <div>
+              <h5 class="card-title mb-1">Total Agents</h5>
+              <p class="card-text fs-4 text-right">{{ total_agents }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Collection -->
+    <div class="col-md-3">
+      <div class="card text-white bg-success mb-3 shadow rounded-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <i class="fas fa-coins fa-2x me-3"></i>
+            <div>
+              <h5 class="card-title mb-1">Today's Collection</h5>
+              <p class="card-text fs-4 text-right">₹{{ todays_collection }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Collection -->
+    <div class="col-md-3">
+      <div class="card text-white bg-warning mb-3 shadow rounded-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <i class="fas fa-calendar-alt fa-2x me-3"></i>
+            <div>
+              <h5 class="card-title mb-1">Monthly Collection</h5>
+              <p class="card-text fs-4 text-right">₹{{ monthly_collection }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-12">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="m-0 text-center">
+            📊 Daily Collection - {{ now|date:"F Y" }}
+          </h5>
+        </div>
+        <div class="card-body">
+          <canvas id="barChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  console.log({{ collections|safe }})
+  const ctx = document.getElementById('barChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ days|safe }},
+      datasets: [{
+        label: '₹ Daily Collection',
+        data: {{ collections|safe }},
+        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        borderRadius: 6,
+        barThickness: 20,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return '₹ ' + context.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '₹ ' + value;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+{{ block.super }} {# ✅ This renders the original modules/apps #} {% endblock %}
