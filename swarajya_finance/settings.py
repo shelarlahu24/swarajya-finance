@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['swarajya-finance.up.railway.app', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['swarajya-finance.up.railway.app']
 
 
 # Application definition
