@@ -134,6 +134,9 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Custome Setting
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-55919.up.railway.app',
+]
 
 # frontend theme setting
 # or
