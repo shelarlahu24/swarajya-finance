@@ -26,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['web-production-55919.up.railway.app','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['swarajya-finance.up.railway.app','127.0.0.1','localhost']
 
 
 # Application definition
@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Custome Setting
 CSRF_TRUSTED_ORIGINS = [
-    'https://web-production-55919.up.railway.app',
+    'https://swarajya-finance.up.railway.app',
 ]
 
 # frontend theme setting
