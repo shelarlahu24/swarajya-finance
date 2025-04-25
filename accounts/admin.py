@@ -43,7 +43,7 @@ class SavingAccountAdmin(admin.ModelAdmin):
         if obj.apply_commission:
             settings=FinanceSettings.get_settings()
             commission_rate=Decimal(settings.commission_deducted) / Decimal(100)
-            commission=obj.total_saving * commission_rate
+            commission=Decimal(obj.total_saving) * commission_rate
             return f"₹ {commission:.2f}"
         return "-"
     commission_display.short_description="Commission Deducted"
@@ -52,7 +52,7 @@ class SavingAccountAdmin(admin.ModelAdmin):
         if obj.apply_interest:
             settings=FinanceSettings.get_settings()
             interest_rate=Decimal(settings.interest_earn) / Decimal(100)
-            interest=obj.total_saving * interest_rate
+            interest=Decimal(obj.total_saving) * interest_rate
             return f"₹ {interest:.2f}"
         return "-"
     interest_display.short_description="interest Earn"

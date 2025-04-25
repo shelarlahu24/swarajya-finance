@@ -1,12 +1,28 @@
 from django.db import models
+from decimal import Decimal
 
 # Create your models here.
 class FinanceSettings(models.Model):
-    minimum_active_days=models.CharField(max_length=3,default=90)
-    loan_eligible_days=models.CharField(max_length=3,default=45)
-    commission_deducted=models.FloatField(default=3.0,help_text="Commission (%) for < minimum_active_days")
-    interest_earn=models.FloatField(default=4.0,help_text="Interest (%) for ≥ minimum_active_days")
-    agent_commission_rate=models.FloatField(default=3.0,help_text="Agent get commission after 1 month")
+    minimum_active_days = models.PositiveIntegerField(default=90)  # changed to PositiveIntegerField
+    loan_eligible_days = models.PositiveIntegerField(default=45)   # changed to PositiveIntegerField
+    commission_deducted = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=Decimal('3.00'), 
+        help_text="Commission (%) for < minimum_active_days"
+    )
+    interest_earn = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=Decimal('4.00'), 
+        help_text="Interest (%) for ≥ minimum_active_days"
+    )
+    agent_commission_rate = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=Decimal('3.00'), 
+        help_text="Agent get commission after 1 month"
+    )
 
     class Meta:
         verbose_name="Finance Setting"

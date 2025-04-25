@@ -61,7 +61,7 @@ class SavingAccount(models.Model):
     
     @property
     def total_saving(self):
-        return self.total_savings
+        return Decimal(self.total_savings)
 
     
     @property
