@@ -40,6 +40,7 @@ def custom_admin_index(request):
     total_agents = User.objects.filter(role='agent')
     todays_collection = Transaction.objects.filter(date=today, transaction_type='deposit').aggregate(Sum('amount'))['amount__sum'] or 0
     monthly_collection = Transaction.objects.filter(date__month=today.month, transaction_type='deposit').aggregate(Sum('amount'))['amount__sum'] or 0
+    yearly_collection = Transaction.objects.filter(date__year=today.year, transaction_type='deposit').aggregate(Sum('amount'))['amount__sum'] or 0
 
     context = admin.site.each_context(request)  # base context
     context.update({
@@ -50,6 +51,7 @@ def custom_admin_index(request):
         "total_agents" : total_agents.count(),
         "todays_collection": todays_collection,
         "monthly_collection": monthly_collection,
+        "yearly_collection":yearly_collection,
         "app_list": admin.site.get_app_list(request),  # ✅ important line!
     })
 

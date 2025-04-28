@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib import messages
 from django.db.models import Sum
 from accounts.models import SavingAccount,Transaction
+from accounts.forms import TransactionForm
 from datetime import date
 from collections import defaultdict
 from decimal import Decimal
@@ -105,32 +106,40 @@ def collections_view(request):
     context={
         'saving_accounts': saving_accounts,
         'page_obj':page_obj,
-        'query':query or ''
+        'query':query or '',
+        'form' : TransactionForm()
     }
 
     return render(request,"accounts/collections_view.html",context)
 
 @login_required(login_url="login")
 def add_collection(request):
-    agent=request.user
+    agent = request.user
     if request.method == 'POST':
-        account_id=request.POST.get('account_id')
-        amount = request.POST.get('amount')
-        remarks = request.POST.get('remarks')
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            account = form.cleaned_data['account']
+            amount = form.cleaned_data['amount']
+            payment_mode = form.cleaned_data['payment_mode']
 
-        try:
-            account=SavingAccount.objects.get(id=account_id)
-        except SavingAccount.DoesNotExist:
-            messages.error(request, 'Account not found.')
+            # Check if account exists and belongs to the agent
+            if not SavingAccount.objects.filter(
+                id=account.id, 
+                **({} if request.user.role == 'admin' else {'agent': agent})
+                ).exists():
+                messages.error(request, 'Account not found or does not belong to you.')
+                return redirect('collections')
+
+            # Create the transaction
+            Transaction.objects.create(
+                saving_account=account,
+                transaction_type='deposit',
+                amount=amount,
+                payment_mode=payment_mode,
+                agent=agent
+            )
+
+            messages.success(request, 'Collection added successfully.')
             return redirect('collections')
-
-        Transaction.objects.create(
-            saving_account=account,
-            transaction_type='deposit',
-            amount=amount,
-            remarks=remarks,
-            agent=agent
-        )
-
-        messages.success(request, 'Collection added successfully.')
-        return redirect('collections')
+        else:
+            messages.error(request, 'There was an error with your form. Please try again.')

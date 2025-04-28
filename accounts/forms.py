@@ -20,7 +20,16 @@ class SavingAccountForm(forms.ModelForm):
                 next_number = 1 if not last_account else int(last_account.account_number) + 1
                 self.initial['account_number'] = str(next_number).zfill(3)  # Auto-generate account number
 
-    
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['account', 'amount', 'payment_mode']
+
+    account = forms.ModelChoiceField(queryset=SavingAccount.objects.all(), label='Account', empty_label="Choose an account", widget=forms.Select(attrs={'class': 'form-control'}))
+    amount = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}))
+    payment_mode = forms.ChoiceField(choices=[('cash', 'Cash'), ('online', 'Online')], widget=forms.Select(attrs={'class': 'form-control'}))
+
+
 class AgentCommissionForm(forms.ModelForm):
     class Meta:
         model = AgentCommission

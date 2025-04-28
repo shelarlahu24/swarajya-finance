@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'core', #settings app
+    'rangefilter',
 ]
 
 #added custom user field

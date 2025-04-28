@@ -4,3 +4,8 @@
   width: auto;
   object-fit: contain;
 }
+
+/* Make Date Range Filter collapsed */
+#changelist-filter .related-widget-wrapper {
+  display: none;
+}

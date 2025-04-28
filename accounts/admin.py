@@ -1,4 +1,5 @@
 from django.contrib import admin
+from rangefilter.filters import DateRangeFilter
 from .models import SavingAccount,Transaction,AgentCommission
 from core.models import FinanceSettings
 from .forms import SavingAccountForm, AgentCommissionForm
@@ -6,6 +7,7 @@ from django import forms
 from decimal import Decimal
 from django.http import HttpResponse
 from openpyxl import Workbook
+from django.utils.translation import gettext_lazy as _
 # Register your models here.
 @admin.register(SavingAccount)
 class SavingAccountAdmin(admin.ModelAdmin):
@@ -28,13 +30,13 @@ class SavingAccountAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Account Info', {
-            'fields': ('account_number','agent', 'full_name','phone','alternative_phone','address', 'is_active', 'eligible_for_loan_status'),
+            'fields': ('account_number','agent', 'full_name','phone','alternative_phone','address'),
         }),
         ('Account Overview', {
-            'fields': ('days_active_display','total_savings','commission_display','interest_display','balance_display'),
+            'fields': ('is_active', 'eligible_for_loan_status','days_active_display','total_savings','commission_display','interest_display','balance_display'),
         }),
         ('Nominee Info', {
-            'fields': ('nominee_name', 'nominee_relation', 'nominee_aadhar'),
+            'fields': ('nominee_name', 'nominee_relation'),
         }),
     )
 
@@ -105,20 +107,35 @@ def export_transactions_excel(modeladmin, request, queryset):
     return response
 export_transactions_excel.short_description = "Export Selected Transactions to Excel"
 
+
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
 
-    list_display = ('saving_account', 'transaction_type', 'amount', 'date','agent','remarks')
-    list_filter = ('transaction_type', 'date','agent','saving_account__account_number')
+    list_display = ('saving_account', 'transaction_type', 'amount', 'date','agent','payment_mode')
+    list_filter = (
+        'transaction_type',
+        'agent',
+        'saving_account__account_number',
+        'date',
+        ('date', DateRangeFilter),
+    )
     # search_fields = ('saving_account__account_number',)
     actions = [export_transactions_excel]
 
     fieldsets = (
         (None,{
-            'fields': ('saving_account', 'transaction_type', 'amount', 'remarks'),
+            'fields': ('saving_account', 'transaction_type', 'amount', 'payment_mode'),
         }),
     )
 
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        if db_field.name=='transaction_type':
+            kwargs['choices']=[
+                ('deposit','Deposit'),
+                ('withdrawal','Withdrawal')
+            ]
+        return super().formfield_for_choice_field(db_field, request, **kwargs)
+    
     # Auto-assign agent
     def save_model(self, request, obj, form, change):
         if not obj.agent:

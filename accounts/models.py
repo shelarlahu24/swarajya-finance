@@ -24,7 +24,6 @@ class SavingAccount(models.Model):
     #Nominee details
     nominee_name=models.CharField(max_length=100)
     nominee_relation=models.CharField(max_length=50)
-    nominee_aadhar=models.CharField(max_length=12)
 
     def __str__(self):
         return f"Account #{self.account_number} - {self.full_name}"
@@ -108,11 +107,16 @@ class Transaction(models.Model):
         ('interest', 'Interest'),
     )
 
+    PAYMENT_MODE=(
+        ('online','Online'),
+        ('cash','Cash'),
+    )
+
     saving_account=models.ForeignKey(SavingAccount,on_delete=models.CASCADE,related_name="account_transactions")
     transaction_type=models.CharField(max_length=50,choices=TRANSACTION_TYPES)
     amount=models.DecimalField(max_digits=10, decimal_places=2)
     date=models.DateField(auto_now_add=True)
-    remarks=models.TextField(blank=True,null=True)
+    payment_mode=models.CharField(max_length=10,choices=PAYMENT_MODE,default='cash')
     agent=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,blank=True,null=True,related_name="user_transactions")
 
     def __str__(self):
