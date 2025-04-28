@@ -10,6 +10,16 @@
 <div class="content">
   <div class="row g-4">
     <div class="col-md-3 col-6">
+      <div class="card text-bg-success">
+        <div class="card-body">
+          <a class="card-title h6 text-decoration-none" href="{% url "customer_list" %}">
+            Customers
+          </a>
+          <h4 class="card-text">{{total_customers}}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
       <div class="card text-bg-primary">
         <div class="card-body">
           <a class="card-title h6 text-decoration-none" href="{% url "collections" %}">Today's Collections</a>
@@ -18,12 +28,12 @@
       </div>
     </div>
     <div class="col-md-3 col-6">
-      <div class="card text-bg-success">
+      <div class="card text-bg-warning">
         <div class="card-body">
-          <a class="card-title h6 text-decoration-none" href="{% url "customer_list" %}">
-            Customers
+          <a class="card-title h6 text-decoration-none" href="{% url "collections" %}">
+            Monthly Collection
           </a>
-          <h4 class="card-text">{{total_customers}}</h4>
+          <h4 class="card-text">₹{{monthly_total}}</h4>
         </div>
       </div>
     </div>
@@ -37,9 +47,6 @@
         <div class="card-body">
           <!-- Monthly Chart Section -->
           <div class="mb-4">
-            <!-- Total Monthly Collection Display -->
-            <!-- <h5 class="mb-3">Total Collection: ₹{{ total_monthly_collection }}</h5> -->
-
             <!-- Chart Canvas -->
             <h6 class="mb-2 text-center">Monthly Collection Summary</h6>
             <canvas id="monthlyChart" height="100"></canvas>

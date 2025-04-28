@@ -1,9 +1,14 @@
 from django.contrib import admin
-from .models import Profile
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
+from .models import CustomUser
 # Register your models here.
-class ProfileAdmin(admin.ModelAdmin):
-    list_display=['user','role','phone']
-    list_filter=['role']
-    search_fields=['user__username','phone']
+admin.site.unregister(Group)
 
-admin.site.register(Profile,ProfileAdmin)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    fieldsets = UserAdmin.fieldsets + (
+        ('Extra Fields', {'fields': ('role','phone', 'address')}),
+    )
+
+admin.site.register(CustomUser,CustomUserAdmin)

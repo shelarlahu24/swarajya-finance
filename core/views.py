@@ -1,14 +1,15 @@
 # core/admin_dashboard.py
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.template.response import TemplateResponse
 from django.db.models import Sum
 from calendar import monthrange
 from django.db.models.functions import TruncDay
 from datetime import timedelta
 from django.utils.timezone import now
-from customers.models import Customer
-from accounts.models import Transaction
+from accounts.models import SavingAccount, Transaction
+
+User=get_user_model()
 
 def custom_admin_index(request):
     today = now().date()
@@ -34,8 +35,9 @@ def custom_admin_index(request):
     # Step 3: Create full list with 0 fallback
     collections = [collection_dict.get(d, 0) for d in all_days]
 
-    total_customers = Customer.objects.count()
-    total_agents = User.objects.filter(profile__role='agent').count()
+    
+    total_customers = SavingAccount.objects.all()
+    total_agents = User.objects.filter(role='agent')
     todays_collection = Transaction.objects.filter(date=today, transaction_type='deposit').aggregate(Sum('amount'))['amount__sum'] or 0
     monthly_collection = Transaction.objects.filter(date__month=today.month, transaction_type='deposit').aggregate(Sum('amount'))['amount__sum'] or 0
 
@@ -44,8 +46,8 @@ def custom_admin_index(request):
         "days": day_labels,
         "collections": collections,
         "now": now(),
-        "total_customers": total_customers,
-        "total_agents" : total_agents,
+        "total_customers": total_customers.count(),
+        "total_agents" : total_agents.count(),
         "todays_collection": todays_collection,
         "monthly_collection": monthly_collection,
         "app_list": admin.site.get_app_list(request),  # ✅ important line!

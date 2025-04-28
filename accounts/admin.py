@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import SavingAccount,Transaction,AgentCommission
 from core.models import FinanceSettings
-from .forms import AgentCommissionForm
+from .forms import SavingAccountForm, AgentCommissionForm
 from django import forms
 from decimal import Decimal
 from django.http import HttpResponse
@@ -9,23 +9,26 @@ from openpyxl import Workbook
 # Register your models here.
 @admin.register(SavingAccount)
 class SavingAccountAdmin(admin.ModelAdmin):
+    form = SavingAccountForm
     
     list_display = (
         'account_number',
-        'customer',
-        'created_at',
+        'full_name',
+        'phone',
+        'agent',
         'total_savings',
         'eligible_for_loan',
         'is_active',
+        'created_at',
     )
-    list_filter = ('eligible_for_loan', 'is_active', 'created_at')
-    search_fields = ('account_number', 'customer__name')
-    readonly_fields = ('account_number', 'eligible_for_loan_status','total_savings',
+    list_filter = ('eligible_for_loan', 'is_active', 'created_at','agent')
+    search_fields = ('account_number', 'full_name','phone')
+    readonly_fields = ('eligible_for_loan_status','total_savings',
                        'days_active_display','commission_display','interest_display','balance_display')
 
     fieldsets = (
         ('Account Info', {
-            'fields': ('customer', 'account_number', 'is_active', 'eligible_for_loan_status'),
+            'fields': ('account_number','agent', 'full_name','phone','alternative_phone','address', 'is_active', 'eligible_for_loan_status'),
         }),
         ('Account Overview', {
             'fields': ('days_active_display','total_savings','commission_display','interest_display','balance_display'),
@@ -34,6 +37,13 @@ class SavingAccountAdmin(admin.ModelAdmin):
             'fields': ('nominee_name', 'nominee_relation', 'nominee_aadhar'),
         }),
     )
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        last_account = SavingAccount.objects.order_by("-id").first()
+        next_number = 1 if not last_account else int(last_account.account_number) + 1
+        initial['account_number'] = str(next_number).zfill(3)
+        return initial
 
     def days_active_display(self,obj):
         return obj.days_active

@@ -1,14 +1,12 @@
 from django.contrib import admin
 from .models import FinanceSettings
-from django.template.response import TemplateResponse
 from django.utils import timezone
-from datetime import timedelta
 from django.db.models import Sum
-from accounts.models import Customer
 from accounts.models import Transaction
 # Register your models here.
 @admin.register(FinanceSettings)
 class FinanceSettingsAdmin(admin.ModelAdmin):
+
     def has_add_permission(self, request):
         # Prevent adding more than one instance
         return not FinanceSettings.objects.exists()
@@ -21,7 +19,6 @@ class CustomAdminSite(admin.AdminSite):
         current_month = today.month
         current_year = today.year
 
-        total_customers = Customer.objects.count()
         todays_collection = Transaction.objects.filter(
             date=today,
             transaction_type='deposit'
@@ -36,7 +33,7 @@ class CustomAdminSite(admin.AdminSite):
         if extra_context is None:
             extra_context = {}
 
-        extra_context['total_customers'] = total_customers
+        extra_context['total_customers'] = 100
         extra_context['todays_collection'] = todays_collection
         extra_context['monthly_collection'] = monthly_collection
         print(extra_context)

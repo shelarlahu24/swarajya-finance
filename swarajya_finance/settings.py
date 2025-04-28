@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'customers',
     'accounts',
     'core', #settings app
 ]
+
+#added custom user field
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,9 +84,6 @@ WSGI_APPLICATION = 'swarajya_finance.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -110,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -151,22 +150,17 @@ JAZZMIN_SETTINGS = {
     "site_header": "Swarajya Finance",
     "site_brand": "Swarajya Finance",
     "welcome_sign": "Welcome to Swarajya Finance Admin Panel",
-    "copyright": "Swarajya",
-    "search_model": ["users.Profile", "auth.User"],
+    "copyright": "Swarajya Finance",
 
     # Custom side menu (menu order)
-    "order_with_respect_to": ["auth", "core", "customers","accounts"],  # your app order here
+    "order_with_respect_to": ["users", "core","accounts.SavingAccount","accounts.Transaction","accounts.AgentCommission"],  # your app order here
 
     "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.group": "fas fa-users",
+        "users.CustomUser": "fas fa-user",
         "core.FinanceSettings": "fas fa-cogs",
-        "customers.Customer": "fas fa-users-cog",
         "accounts.AgentCommission": "fas fa-money-bill",
         "accounts.SavingAccount": "fas fa-piggy-bank",
         "accounts.Transaction": "fas fa-exchange-alt",
-        "users.Profile": "fas fa-user-tie",
     },
 
     "site_logo": "images/logo.png",

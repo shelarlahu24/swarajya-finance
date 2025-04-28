@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from customers.models import Customer
-from django.contrib.auth.models import User
+from django.conf import settings
 from core.models import FinanceSettings
 from datetime import date,timedelta
 from django.utils.timezone import now
@@ -9,13 +8,18 @@ from decimal import Decimal,ROUND_DOWN,ROUND_HALF_UP
 
 # Create your models here.
 class SavingAccount(models.Model):
-    customer=models.ForeignKey(Customer, on_delete=models.CASCADE,related_name='saving_account')
-    account_number=models.CharField(max_length=3,unique=True,editable=False)
+    agent=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,related_name='assigned_saving_accounts')
+    account_number=models.CharField(max_length=3,unique=True)
+    full_name=models.CharField(max_length=100)
+    phone=models.CharField(unique=True, max_length=10)
+    alternative_phone=models.CharField(unique=True, max_length=10,null=True, blank=True)
+    address=models.TextField()
     is_active=models.BooleanField(default=True)
     eligible_for_loan=models.BooleanField(default=False)
     total_savings=models.DecimalField(max_digits=10, decimal_places=2,default=0.00)
     last_withdrawal_date = models.DateField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
 
     #Nominee details
     nominee_name=models.CharField(max_length=100)
@@ -23,7 +27,7 @@ class SavingAccount(models.Model):
     nominee_aadhar=models.CharField(max_length=12)
 
     def __str__(self):
-        return f"Account #{self.account_number} - {self.customer.full_name}"
+        return f"Account #{self.account_number} - {self.full_name}"
     
     @property
     def days_active(self):
@@ -86,10 +90,10 @@ class SavingAccount(models.Model):
 
     def save(self, *args, **kwargs):
         # Auto-generate account number
-        if not self.account_number:
-            last_account=SavingAccount.objects.order_by("-id").first()
-            next_number=1 if not last_account else int(last_account.account_number)+1
-            self.account_number=str(next_number).zfill(3)
+        # if not self.account_number:
+        #     last_account=SavingAccount.objects.order_by("-id").first()
+        #     next_number=1 if not last_account else int(last_account.account_number)+1
+        #     self.account_number=str(next_number).zfill(3)
 
         # Set loan eligibility
         self.eligible_for_loan = self.is_eligible_for_loan
@@ -109,7 +113,7 @@ class Transaction(models.Model):
     amount=models.DecimalField(max_digits=10, decimal_places=2)
     date=models.DateField(auto_now_add=True)
     remarks=models.TextField(blank=True,null=True)
-    agent=models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True,related_name="user_transactions")
+    agent=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,blank=True,null=True,related_name="user_transactions")
 
     def __str__(self):
         return f"{self.transaction_type.title()} of ₹{self.amount} on {self.date} (Account{self.saving_account.account_number})"
@@ -204,7 +208,7 @@ class Transaction(models.Model):
         account.save()
 
 class AgentCommission(models.Model):
-    agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='commissions')
+    agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='commissions')
     month = models.DateField(help_text="Month this commission is for (use 1st of the month)")
     total_collection = models.DecimalField(max_digits=10, decimal_places=2)
     commission = models.DecimalField(max_digits=10, decimal_places=2)

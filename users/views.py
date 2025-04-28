@@ -2,7 +2,6 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
-from customers.models import Customer
 from django.contrib import messages
 from django.db.models import Sum
 from accounts.models import SavingAccount,Transaction
@@ -17,42 +16,41 @@ def dashboard_view(request):
 
     agent = request.user
     today = date.today()
-    year=today.year
-    month=today.month
-    num_days = calendar.monthrange(year,month)[1]
+    year, month = today.year, today.month
+    num_days = calendar.monthrange(year, month)[1]
 
-    # Daily total deposit for each day of current month
-    start_date=date(year,month,1)
-    end_date=date(year,month,num_days)
+    start_date = date(year, month, 1)
+    end_date = date(year, month, num_days)
 
-    monthly_transaction=Transaction.objects.filter(
-        agent=agent,
+    # Fetch monthly transactions
+    monthly_transaction = Transaction.objects.filter(
         transaction_type="deposit",
-        date__range=(start_date,end_date)
+        date__range=(start_date, end_date),
+        **({} if request.user.role == 'admin' else {'agent': agent})
     )
 
-    # Build daily data dictionary
-    daily_data=defaultdict(lambda: Decimal('0.00'))
+    # Calculate daily deposit data
+    daily_data = defaultdict(lambda: Decimal('0.00'))
     for txn in monthly_transaction:
-        daily_data[txn.date.day] +=txn.amount
+        daily_data[txn.date.day] += txn.amount
 
-    # Prepare data for Chart.js
+    # Prepare Chart.js data
     chart_labels = list(range(1, num_days + 1))
-    chart_data=[float(daily_data.get(day,0)) for day in chart_labels]
+    chart_data = [float(daily_data.get(day, 0)) for day in chart_labels]
 
+    # Monthly collection total
+    monthly_total = sum(daily_data.values())
 
+    # Customers assigned
+    customers = SavingAccount.objects.filter(
+        **({} if request.user.role == 'admin' else {'agent': agent})
+    )
 
-    # Customers assigned to agent
-    customers = Customer.objects.filter(agent=agent)
-
-    # Today's collections
-    todays_collections = Transaction.objects.filter(agent=agent, date=today, transaction_type='deposit')
-    todays_total = todays_collections.aggregate(total=Sum('amount'))['total'] or 0
-    
     context = {
         'chart_labels': chart_labels,
         'chart_data': chart_data,
-        'todays_total': daily_data.get(today.day, 0),
+        'todays_total': float(daily_data.get(today.day, 0)),
+        'monthly_total': float(monthly_total),
         'total_customers': customers.count(),
     }
 
@@ -62,11 +60,14 @@ def dashboard_view(request):
 def customer_list(request):
     agent=request.user
     query=request.GET.get('q')
-    customers=Customer.objects.filter(agent=agent).order_by('-id')
+    customers=SavingAccount.objects.filter(
+            **({} if request.user.role == 'admin' else {'agent': agent})
+        ).order_by('-id')
 
     if query:
-        customers=Customer.objects.filter(
-            Q(full_name__icontains=query)
+        customers=SavingAccount.objects.filter(
+            Q(full_name__icontains=query),
+        **({} if request.user.role == 'admin' else {'agent': agent})
         ).order_by('-id')
 
     # Pagination
@@ -85,12 +86,15 @@ def customer_list(request):
 def collections_view(request):
     agent=request.user
     query=request.GET.get('q')
-    saving_accounts=SavingAccount.objects.filter(customer__agent=agent)
-    collections=Transaction.objects.filter(agent=agent).order_by('-id')
+    saving_accounts=SavingAccount.objects.filter(agent=agent)
+    collections=Transaction.objects.filter(
+        **({} if request.user.role == 'admin' else {'agent': agent})
+    ).order_by('-id')
 
     if query:
         collections=Transaction.objects.filter(
-            Q(agent=agent) & Q(saving_account__customer__full_name__icontains=query)
+            Q(agent=agent) & Q(saving_account__full_name__icontains=query),
+            **({} if request.user.role == 'admin' else {'agent': agent})
         ).order_by('-id')
 
     # Pagination

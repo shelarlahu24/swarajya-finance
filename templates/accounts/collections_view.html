@@ -157,7 +157,7 @@
             <select name="account_id" class="form-control" required>
               {% for account in saving_accounts %}
               <option value="{{ account.id }}">
-                {{ account.account_number }} - {{ account.customer.full_name }}
+                {{ account.account_number }} - {{ account.full_name }}
               </option>
               {% endfor %}
             </select>
