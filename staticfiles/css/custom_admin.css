@@ -1,0 +1,6 @@
+.login-logo img {
+  max-height: 120px !important;
+  /* adjust as needed */
+  width: auto;
+  object-fit: contain;
+}
