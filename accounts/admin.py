@@ -204,7 +204,9 @@ class AgentCommissionAdmin(admin.ModelAdmin):
 
     def commission(self, obj):
         total = self.monthly_collection(obj)
-        return (Decimal(total) * Decimal('0.03')).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        settings=FinanceSettings.get_settings()
+        commission_rate=Decimal(settings.commission_deducted) / Decimal(100)
+        return (Decimal(total) * commission_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
     def monthly_collection_display(self, obj):
         return self.monthly_collection(obj)
@@ -236,6 +238,8 @@ class AgentCommissionAdmin(admin.ModelAdmin):
 
         customers = SavingAccount.objects.filter(agent=agent)
         customer_data = []
+        settings=FinanceSettings.get_settings()
+        commission_rate=Decimal(settings.commission_deducted) / Decimal(100)
 
         for customer in customers:
             total = Transaction.objects.filter(
@@ -244,9 +248,13 @@ class AgentCommissionAdmin(admin.ModelAdmin):
                 date__year=year
             ).aggregate(total=Sum('amount'))['total'] or 0
 
+            
+            commission_value = (Decimal(total) * commission_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    
             customer_data.append({
                 'name': customer.full_name or customer.username,
-                'total': total
+                'total': total,
+                'commission_value':commission_value
             })
 
         month_year_label = datetime(year, month, 1).strftime('%B %Y')

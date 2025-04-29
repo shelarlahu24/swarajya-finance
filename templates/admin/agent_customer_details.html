@@ -16,6 +16,7 @@
               <th>No.</th>
               <th>Customer Name</th>
               <th>Total Collection (₹)</th>
+              <th>Company Paid Amt (₹)</th>
             </tr>
           </thead>
           <tbody>
@@ -24,6 +25,7 @@
               <td>{{ forloop.counter }}</td>
               <td>{{ customer.name }}</td>
               <td>₹ {{ customer.total }}</td>
+              <td>₹ {{ customer.commission_value }}</td>
             </tr>
             {% empty %}
             <tr>
