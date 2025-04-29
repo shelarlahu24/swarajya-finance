@@ -194,9 +194,11 @@ class AgentCommissionAdmin(admin.ModelAdmin):
 
     def monthly_collection(self, obj):
         month, year = self.get_selected_month_year()
-        savings = SavingAccount.objects.filter(agent=obj)
+        # savings = SavingAccount.objects.filter(agent=obj)
         txns = Transaction.objects.filter(
-            saving_account__in=savings,
+            # saving_account__in=savings,
+            agent=obj,  # Correct: transactions collected by the agent
+            transaction_type='deposit',  # Optional: only include deposits if needed
             date__month=month,
             date__year=year
         )
@@ -243,7 +245,8 @@ class AgentCommissionAdmin(admin.ModelAdmin):
 
         for customer in customers:
             total = Transaction.objects.filter(
-                saving_account=customer,
+                agent=agent,  # Correct: transactions collected by the agent
+                transaction_type='deposit',
                 date__month=month,
                 date__year=year
             ).aggregate(total=Sum('amount'))['total'] or 0
