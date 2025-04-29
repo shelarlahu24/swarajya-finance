@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from core.models import FinanceSettings
 from datetime import date,timedelta
@@ -211,48 +212,10 @@ class Transaction(models.Model):
 
         account.save()
 
-class AgentCommission(models.Model):
-    agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='commissions')
-    month = models.DateField(help_text="Month this commission is for (use 1st of the month)")
-    total_collection = models.DecimalField(max_digits=10, decimal_places=2)
-    commission = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+User = get_user_model()
 
-    def calculate_commission(self):
-        settings = FinanceSettings.get_settings()
-        commission_rate = Decimal(str(settings.agent_commission_rate)) / Decimal('100')
-
-        total_collection = self.calculate_total_collection()
-        self.total_collection = total_collection
-        self.commission = total_collection * commission_rate
-
-    def calculate_total_collection(self):
-        first_day_of_month = self.month.replace(day=1)
-        last_day_of_month = (first_day_of_month.replace(month=first_day_of_month.month + 1) - timedelta(days=1))
-
-        total_collection = Transaction.objects.filter(
-            agent=self.agent,
-            transaction_type='deposit',
-            date__range=(first_day_of_month, last_day_of_month)
-        ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0.00')
-
-        return total_collection
-
-    def save(self, *args, **kwargs):
-        # Calculate commission first
-        self.calculate_commission()
-
-        # Check if a record already exists for this agent and month
-        existing = AgentCommission.objects.filter(agent=self.agent, month=self.month).first()
-
-        if existing and not self.pk:
-            # If adding a new one but record exists — update the existing one
-            existing.total_collection = self.total_collection
-            existing.commission = self.commission
-            existing.save(update_fields=['total_collection', 'commission'])
-        else:
-            # Normal save (new or updating this current one)
-            super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{self.agent} - {self.month.strftime('%B %Y')}"
+class AgentProxy(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'Agent Commission'
+        verbose_name_plural = 'Agent Commissions'

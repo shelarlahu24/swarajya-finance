@@ -154,12 +154,12 @@ JAZZMIN_SETTINGS = {
     "copyright": "Swarajya Finance",
 
     # Custom side menu (menu order)
-    "order_with_respect_to": ["users", "core","accounts.SavingAccount","accounts.Transaction","accounts.AgentCommission"],  # your app order here
+    "order_with_respect_to": ["users", "core","accounts.SavingAccount","accounts.Transaction","accounts.AgentProxy"],  # your app order here
 
     "icons": {
         "users.CustomUser": "fas fa-user",
         "core.FinanceSettings": "fas fa-cogs",
-        "accounts.AgentCommission": "fas fa-money-bill",
+        "accounts.AgentProxy": "fas fa-money-bill",
         "accounts.SavingAccount": "fas fa-piggy-bank",
         "accounts.Transaction": "fas fa-exchange-alt",
     },
