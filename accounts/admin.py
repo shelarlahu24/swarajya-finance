@@ -252,6 +252,7 @@ class AgentCommissionAdmin(admin.ModelAdmin):
         month_year_label = datetime(year, month, 1).strftime('%B %Y')
 
         context = {
+             **self.admin_site.each_context(request),
             'agent': agent,
             'month_year': month_year_label,
             'customer_data': customer_data,
